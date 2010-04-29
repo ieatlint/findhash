@@ -1,0 +1,40 @@
+This program was written to help index files on websites.
+
+It works by feeding it a single URL over stdin.  The program will then proceed to fetch the data and analyze it by chunks.  It never saves anything to disk, and uses little memory, no matter how large the file being analyzed.
+
+The data output is in jSON, one file per structure.  A single URL can yield an unlimited number of files.
+For instance, say you have blah.tar.gz.  The archive has the following files:
+one.txt
+dir/two.txt
+dir/dir2/three.txt
+
+The output from rehasher for this file will be for the three files, plus blah.tar and blah.tar.gz (five files total).  This allows dupe checking through archives.
+
+Supported compression formats:
+bzip2
+gzip/zlib
+
+This program uses libarchive for handling archives.  The supported archives are as such determined by this library.  See http://code.google.com/p/libarchive/ for a complete list.
+
+
+Required libraries:
+libmagic, libarchive, libcurl, zlib, bzlib, libgcrypt
+
+
+Example:
+
+echo http://www.gnu.org/licenses/gpl-3.0.txt | ./rehasher
+[
+	{
+		{
+			"URL": "http://www.gnu.org/licenses/gpl-3.0.txt"
+		},
+		"Size": 35147,
+		"MIME-Type: "text/plain",
+		"MD5": "d32239bcb673463ab874e80d47fae504",
+		"MD4": "e476f0c4393b4fa2388fdc7b3647fff4",
+		"SHA1": "8624bcdae55baeef00cd11d5dfcfa60f68710a02",
+		"SHA256": "8ceb4b9ee5adedde47b31e975c1d90c73ad27b6b165a1dcd80c7c545eb65b903",
+		"Whirlpool": "9e4bbb1ab48b0df77d0f5df1229a5c6314f0d65c4c96bcf7cbd870fd0397036664eaea9c7318285f82ad7715473b1298c36735cebeb0a04d8a65ad9b31106bd1"
+	}
+]
